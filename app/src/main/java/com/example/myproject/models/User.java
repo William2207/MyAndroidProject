@@ -1,23 +1,42 @@
 package com.example.myproject.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    @SerializedName("profileImage")
     private String image;
+    @SerializedName("username")
     private String name;
     private String email;
-    private String password;
 
-    public User(String image, String name, String email, String password) {
+    private String bio;
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public User(String name, String image, String email, String bio){
+        this.email = email;
+        this.name = name;
         this.image = image;
-        this.name = name;
-        this.email = email;
-        this.password = password;
+        this.bio = bio;
     }
 
-    public User(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
+
 
     public String getImage() {
         return image;
@@ -43,11 +62,4 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

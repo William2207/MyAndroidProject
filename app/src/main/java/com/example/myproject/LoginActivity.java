@@ -2,6 +2,7 @@ package com.example.myproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -10,12 +11,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myproject.apiservice.ApiService;
+import com.example.myproject.apiservice.RetrofitClient;
 import com.example.myproject.databinding.ActivityLoginBinding;
 import com.example.myproject.databinding.ActivitySignupBinding;
+import com.example.myproject.models.User;
+import com.example.myproject.utils.JwtUtils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private ApiService apiService;
+    private JwtUtils jwtUtils;
+    public static User user;
+    public static String jwtToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +53,66 @@ public class LoginActivity extends AppCompatActivity {
                 // Hiển thị thông báo Toast nếu có trường nào bị bỏ trống
                 Toast.makeText(LoginActivity.this, "Please fill all the information", Toast.LENGTH_SHORT).show();
             } else {
-                // Bạn có thể thêm logic đăng ký tại đây
-                Toast.makeText(LoginActivity.this, "All fields are filled!", Toast.LENGTH_SHORT).show();
+                apiService = RetrofitClient.getRetrofit().create(ApiService.class);
+                apiService.login(username,password).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        //Log.d("LoginActivity", "Response code: " + response.code());
+                        //Log.d("LoginActivity", "Response body: " + response.body());
+                        //Log.d("LoginActivity", "Raw response: " + response.raw().toString());
+                        if(response.isSuccessful()){
+                            jwtToken = response.body();
+                            Log.d("Login", "JWT Token: " + jwtToken);
+
+                            try{
+                                String uname = JwtUtils.getUsernameFromToken(jwtToken);
+                                //long expiration = JwtUtils.getExpirationFromToken(message);
+
+                                apiService.getUserByUsername("Bearer " + jwtToken,uname).enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> call, Response<User> response) {
+
+                                        if(response.isSuccessful())
+                                        {
+                                            user = response.body();
+                                            Log.d("GetUser", "User: " + user.toString());
+                                        }
+                                        else{
+                                            Log.e("API Error", "Response code: " + response.code());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<User> call, Throwable t) {
+                                        Log.e("API Error", "Failure: " + t.getMessage());
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            finish();
+                        } else {
+                            // Hiển thị mã lỗi và body phản hồi để debug
+                            String errorBody = null;
+                            try {
+                                errorBody = response.errorBody().string();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(LoginActivity.this, "Login failed: " + response.code() + " - " + errorBody, Toast.LENGTH_LONG).show();
+                            Log.e("LoginActivity", "Response code: " + response.code() + ", Error: " + errorBody);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("LoginActivity", "Error: " + t.getMessage());
+                    }
+                });
             }
         });
         // Create new account btn

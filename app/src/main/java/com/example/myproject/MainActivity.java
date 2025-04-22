@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Intent với MainActivity.this làm context
-                startActivity(new Intent(MainActivity.this, SignupActivity.class));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
             }
         }, 3000);

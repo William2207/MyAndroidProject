@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -12,10 +13,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myproject.apiservice.ApiService;
+import com.example.myproject.apiservice.RetrofitClient;
 import com.example.myproject.databinding.ActivitySignupBinding;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
     private ActivitySignupBinding binding;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +57,29 @@ public class SignupActivity extends AppCompatActivity {
                 // Hiển thị thông báo Toast nếu có trường nào bị bỏ trống
                 Toast.makeText(SignupActivity.this, "Please fill all the information", Toast.LENGTH_SHORT).show();
             } else {
-                // Bạn có thể thêm logic đăng ký tại đây
-                Toast.makeText(SignupActivity.this, "All fields are filled!", Toast.LENGTH_SHORT).show();
+                    apiService = RetrofitClient.getRetrofit().create(ApiService.class);
+                    apiService.registerUser(username,password,email).enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if(response.isSuccessful()){
+                                String message = response.body();
+                                Toast.makeText(SignupActivity.this, message != null ? message : "Registration successful", Toast.LENGTH_SHORT).show();
+                                binding.username.getEditText().setText("");
+                                binding.email.getEditText().setText("");
+                                binding.password.getEditText().setText("");
+                                startActivity(new Intent(SignupActivity.this,LoginActivity.class));
+                                finish();
+                            }
+                            else {
+                                Toast.makeText(SignupActivity.this, "Registration failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.d("logg",t.getMessage());
+                        }
+                    });
             }
 
         });
