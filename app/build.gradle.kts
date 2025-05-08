@@ -69,6 +69,9 @@ dependencies {
     implementation ("com.hendraanggrian.appcompat:socialview-autocomplete:0.1")
 
     //file picker
-    //implementation ("androidx.activity:activity:1.7.0")
+    implementation ("androidx.activity:activity:1.7.0")
+
+    //swipe fresh layout
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
 }

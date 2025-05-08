@@ -1,18 +1,12 @@
 package com.example.myproject.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+public class User implements Parcelable {
     private int userId;
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     @SerializedName("profileImage")
     private String image;
     @SerializedName("username")
@@ -34,6 +28,13 @@ public class User {
         this.name = name;
         this.image = image;
         this.bio = bio;
+    }
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
 
@@ -61,5 +62,40 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    protected User(Parcel in) {
+        userId = in.readInt();
+        image = in.readString();
+        name = in.readString();
+        email = in.readString();
+        bio = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(userId);
+        dest.writeString(image);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(bio);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
 
 }

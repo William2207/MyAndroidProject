@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myproject.databinding.FragmentCreateBinding;
+import com.example.myproject.post.PostActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class CreateFragment extends BottomSheetDialogFragment {
@@ -28,7 +29,7 @@ public class CreateFragment extends BottomSheetDialogFragment {
         binding.post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(getContext(), PostActivity.class));
+                startActivity(new Intent(getContext(), PostActivity.class));
             }
         });
 

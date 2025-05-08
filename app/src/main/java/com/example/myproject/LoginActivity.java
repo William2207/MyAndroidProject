@@ -1,6 +1,7 @@
 package com.example.myproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -57,12 +58,16 @@ public class LoginActivity extends AppCompatActivity {
                 apiService.login(username,password).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        //Log.d("LoginActivity", "Response code: " + response.code());
-                        //Log.d("LoginActivity", "Response body: " + response.body());
-                        //Log.d("LoginActivity", "Raw response: " + response.raw().toString());
                         if(response.isSuccessful()){
                             jwtToken = response.body();
                             Log.d("Login", "JWT Token: " + jwtToken);
+
+                            // Lưu JWT token vào SharedPreferences ngay lập tức
+                            SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("jwt_token", jwtToken);
+                            editor.apply();  // hoặc commit() nếu cần đảm bảo lưu ngay lập tức
+
 
                             try{
                                 String uname = JwtUtils.getUsernameFromToken(jwtToken);
@@ -71,11 +76,23 @@ public class LoginActivity extends AppCompatActivity {
                                 apiService.getUserByUsername("Bearer " + jwtToken,uname).enqueue(new Callback<User>() {
                                     @Override
                                     public void onResponse(Call<User> call, Response<User> response) {
-
                                         if(response.isSuccessful())
                                         {
                                             user = response.body();
                                             Log.d("GetUser", "User: " + user.toString());
+                                            Log.d("GetUser", "User: " + user.getUserId());
+
+                                            // Lưu thông tin user vào SharedPreferences
+                                            SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.putInt("user_id", user.getUserId());
+                                            editor.putString("username", user.getName());
+                                            // Lưu các thông tin khác nếu cần
+                                            editor.commit();  // Dùng commit() để đảm bảo lưu xong mới chuyển màn hình
+
+                                            // CHỈ chuyển màn hình sau khi đã lưu thông tin user thành công
+                                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                            finish();
                                         }
                                         else{
                                             Log.e("API Error", "Response code: " + response.code());
@@ -91,9 +108,6 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
-
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                            finish();
                         } else {
                             // Hiển thị mã lỗi và body phản hồi để debug
                             String errorBody = null;
