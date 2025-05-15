@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ImageView
+        android:id="@+id/post_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_launcher_foreground" />
+
+    <!-- Biểu tượng cho bài đăng nhiều ảnh (như Instagram) -->
+    <ImageView
+        android:id="@+id/multiple_images_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/multiple"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/post_image"
+        app:layout_constraintEnd_toEndOf="@id/post_image"
+        android:layout_margin="8dp" />
+
+    <!-- Biểu tượng cho video (nếu có) -->
+    <ImageView
+        android:id="@+id/video_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/reelwhite"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/post_image"
+        app:layout_constraintEnd_toEndOf="@id/post_image"
+        android:layout_margin="8dp" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
