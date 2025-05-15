@@ -4,6 +4,9 @@ import com.example.myproject.dto.CommentDTO;
 import com.example.myproject.dto.LikeDTO;
 import com.example.myproject.dto.PostDTO;
 import com.example.myproject.dto.SaveDTO;
+import com.example.myproject.models.ChatRequest;
+import com.example.myproject.models.ChatResponse;
+import com.example.myproject.models.Message;
 import com.example.myproject.models.PostCollection;
 import com.example.myproject.models.User;
 
@@ -20,6 +23,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -150,4 +154,24 @@ public interface ApiService {
     @GET("follow/{userId}")
     Call<Boolean> isFollowing(@Header("Authorization") String token,@Path("userId") int userId, @Query("username") String username);
 
+
+    @GET("user/profile/followings")
+    Call<List<User>> getFollowingUsers(
+            @Header("Authorization") String token,
+            @Query("userId") int userId
+    );
+
+    @POST("messages/send")
+    Call<Message> sendMessages(@Header("Authorization") String token,@Body Message message);
+
+    @GET("messages/{userId}/{otherUserId}")
+    Call<List<Message>> getMessages(
+            @Header("Authorization") String token,
+            @Path("userId") String userId,
+            @Path("otherUserId") String otherUserId);
+    @PUT("messages/read")
+    Call<Void> markAsRead(@Header("Authorization") String token,@Body List<String> messageIds);
+
+    @POST("chat/completions")
+    Call<ChatResponse> sendMessage(@Body ChatRequest request);
 }

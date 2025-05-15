@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myproject.R;
 import com.example.myproject.adapters.ImageAdapter;
@@ -27,6 +28,7 @@ import com.example.myproject.apiservice.ApiService;
 import com.example.myproject.apiservice.RetrofitClient;
 import com.example.myproject.databinding.ActivityPostBinding;
 import com.example.myproject.models.PostCollection;
+import com.example.myproject.models.ProfileViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -171,6 +173,8 @@ public class PostActivity extends AppCompatActivity {
                             public void onResponse(Call<PostCollection> call, Response<PostCollection> response) {
                                 if(response.isSuccessful()){
                                     Toast.makeText(PostActivity.this, "Success ", Toast.LENGTH_SHORT).show();
+//                                    ProfileViewModel viewModel = new ViewModelProvider(PostActivity.this).get(ProfileViewModel.class);
+//                                    viewModel.notifyPostUpdated();
                                     progressDialog.dismiss();
                                     finish();
                                 }

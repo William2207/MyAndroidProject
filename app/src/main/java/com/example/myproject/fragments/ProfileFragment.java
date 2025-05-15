@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.myproject.ChatBotActivity;
 import com.example.myproject.EditProfileActivity;
 import com.example.myproject.LoginActivity;
 import com.example.myproject.R;
@@ -28,7 +29,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment{
 
     private FragmentProfileBinding binding;
     private ViewPagerAdapter viewPagerAdapter;
@@ -118,6 +119,15 @@ public class ProfileFragment extends Fragment {
                 editor.apply();
                 startActivity(new Intent(requireContext(), LoginActivity.class));
 
+            }
+        });
+
+        //Ai btn
+        binding.chatbot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChatBotActivity.class);
+                startActivity(intent);
             }
         });
 

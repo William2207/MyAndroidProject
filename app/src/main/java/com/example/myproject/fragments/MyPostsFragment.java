@@ -1,6 +1,7 @@
 package com.example.myproject.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.myproject.PostDetailActivity;
 import com.example.myproject.R;
 import com.example.myproject.adapters.ProfilePostAdapter;
 import com.example.myproject.apiservice.ApiService;
@@ -28,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MyPostsFragment extends Fragment{
+public class MyPostsFragment extends Fragment implements ProfilePostAdapter.OnPostClickListener{
 
     private RecyclerView recyclerView;
     private ProfilePostAdapter postsAdapter;
@@ -57,6 +59,7 @@ public class MyPostsFragment extends Fragment{
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3)); // Lưới 3 cột
 
         postsAdapter = new ProfilePostAdapter(postList);
+        postsAdapter.setOnPostClickListener(this);
         recyclerView.setAdapter(postsAdapter);
         // data
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
@@ -84,4 +87,17 @@ public class MyPostsFragment extends Fragment{
         return view;
     }
 
+    @Override
+    public void onPostClick(PostDTO post) {
+        if (getActivity() != null && post != null) {
+            Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+            intent.putExtra("POST_DATA", post); // post đã là Parcelable
+            startActivity(intent);
+        } else {
+            if (post == null) {
+                Toast.makeText(getContext(), "Dữ liệu bài đăng không hợp lệ.", Toast.LENGTH_SHORT).show();
+            }
+            // Không làm gì nếu getActivity() là null (fragment không còn attach vào activity)
+        }
+    }
 }

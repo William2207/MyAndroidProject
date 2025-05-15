@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.ContextWrapper;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +36,7 @@ import com.example.myproject.dto.LikeDTO;
 import com.example.myproject.dto.PostDTO;
 import com.example.myproject.dto.SaveDTO;
 import com.example.myproject.models.PostCollection;
+import com.example.myproject.models.ProfileViewModel;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

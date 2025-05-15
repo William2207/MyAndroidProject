@@ -13,6 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/chatbot"
+            android:src="@drawable/generative"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/logout"
             android:layout_width="25dp"
             android:layout_height="25dp"

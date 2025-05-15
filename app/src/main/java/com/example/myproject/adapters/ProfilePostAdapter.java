@@ -41,6 +41,13 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
     @Override
     public void onBindViewHolder(@NonNull ProfilePostAdapter.PostProfileViewHolder holder, int position) {
         PostDTO post = postList.get(position);
+        if (post == null) { // Thêm kiểm tra null cho post nếu có khả năng postList chứa null
+            Log.e("ProfilePostAdapter", "PostDTO at position " + position + " is null.");
+            // Có thể ẩn view hoặc hiển thị trạng thái lỗi
+            holder.itemView.setVisibility(View.GONE); // Ví dụ: ẩn item nếu post là null
+            return;
+        }
+        holder.itemView.setVisibility(View.VISIBLE);
 
         // Kiểm tra mediaUrls
         List<String> mediaUrls = post.getMediaUrls();

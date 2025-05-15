@@ -1,12 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
-
 android {
     namespace = "com.example.myproject"
     compileSdk = 35
 buildFeatures{
     viewBinding = true
+    buildConfig = true
 }
     defaultConfig {
         applicationId = "com.example.myproject"
@@ -18,6 +20,13 @@ buildFeatures{
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Đọc local.properties
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -26,6 +35,15 @@ buildFeatures{
                 "proguard-rules.pro"
             )
         }
+        named("debug") {
+            buildConfigField("String", "OPENROUTER_API_KEY", "\"${localProperties["OPENROUTER_API_KEY"]}\"")
+        }
+        named("release") {
+            buildConfigField("String", "OPENROUTER_API_KEY", "\"${localProperties["OPENROUTER_API_KEY"]}\"")
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
