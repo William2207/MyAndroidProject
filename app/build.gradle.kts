@@ -74,4 +74,10 @@ dependencies {
     //swipe fresh layout
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
+    //Exoplay
+    implementation("androidx.media3:media3-exoplayer:1.6.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.6.1")
+    implementation("androidx.media3:media3-ui:1.6.1")
+    implementation("androidx.media3:media3-ui-compose:1.6.1")
+
 }

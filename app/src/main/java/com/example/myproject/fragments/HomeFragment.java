@@ -1,7 +1,4 @@
 package com.example.myproject.fragments;
-
-import static com.example.myproject.LoginActivity.jwtToken;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.myproject.LoginActivity;
 import com.example.myproject.R;
 import com.example.myproject.adapters.PostAdapter;
 import com.example.myproject.apiservice.ApiService;
@@ -72,7 +68,7 @@ public class HomeFragment extends Fragment {
         // Lấy userId từ SharedPreferences
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         int userId = sharedPreferences.getInt("user_id", -1);
-        jwtToken = sharedPreferences.getString("jwt_token", "");
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
 
         if (userId != -1 && !jwtToken.isEmpty()) {
             // Tải dữ liệu từ API
@@ -95,6 +91,9 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
     private void loadPostsFromApi(int userId) {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
+
         apiService = RetrofitClient.getRetrofit().create(ApiService.class);
         // Log để debug
         //Log.d("HomeFragment", "Gọi API với userId: " + userId + ", token: " + jwtToken);
@@ -108,14 +107,6 @@ public class HomeFragment extends Fragment {
                     postList.addAll(response.body());
                     postAdapter.notifyDataSetChanged();
 
-//                    PostDTO testPost = postList.get(0);
-//                    String jsonTest = new Gson().toJson(testPost);
-//                    Log.d("HomeFragment", "Serialized post: " + jsonTest);
-
-                    // Log kết quả
-//                    Log.d("HomeFragment", "Số bài đăng nhận được: " + postList.size());
-                    //Log.d("HomeFragment", "Số bài đăng nhận được: " + postList.get(0).getComments());
-//                    Log.d("HomeFragment", "Check Like " + postList.get(0).isLiked());
                 } else {
                     Toast.makeText(getContext(), "Error " + response.message(), Toast.LENGTH_SHORT).show();
                 }
@@ -135,7 +126,7 @@ public class HomeFragment extends Fragment {
         binding.swipeRefreshLayout.setRefreshing(true);
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         int userId = sharedPreferences.getInt("user_id", -1);
-        jwtToken = sharedPreferences.getString("jwt_token", "");
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
         loadPostsFromApi(userId);
     }
 

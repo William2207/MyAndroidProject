@@ -20,7 +20,7 @@ public class RetrofitClient {
                     .build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.111.10:8080/api/")
+                    .baseUrl("http://10.0.2.2:8080/api/")
                     .client(client)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())

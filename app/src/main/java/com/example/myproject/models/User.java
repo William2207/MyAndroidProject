@@ -12,8 +12,46 @@ public class User implements Parcelable {
     @SerializedName("username")
     private String name;
     private String email;
-
     private String bio;
+
+    private int followers;
+    private int followings;
+
+    private int posts;
+
+    public int getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(int followers) {
+        this.followers = followers;
+    }
+
+    public int getFollowings() {
+        return followings;
+    }
+
+    public void setFollowings(int followings) {
+        this.followings = followings;
+    }
+
+    public int getPosts() {
+        return posts;
+    }
+
+    public void setPosts(int posts) {
+        this.posts = posts;
+    }
+
+
+
+    public User(int userId, String uname, String bio, String profileImage, String email) {
+        this.userId = userId;
+        this.name = uname;
+        this.bio = bio;
+        this.image = profileImage;
+        this.email = email;
+    }
 
     public String getBio() {
         return bio;

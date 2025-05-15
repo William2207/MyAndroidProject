@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.example.myproject.databinding.FragmentCreateBinding;
 import com.example.myproject.post.PostActivity;
+import com.example.myproject.post.ReelsActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class CreateFragment extends BottomSheetDialogFragment {
@@ -37,7 +38,7 @@ public class CreateFragment extends BottomSheetDialogFragment {
         binding.reel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), ReelFragment.class));
+                startActivity(new Intent(getContext(), ReelsActivity.class));
             }
         });
 

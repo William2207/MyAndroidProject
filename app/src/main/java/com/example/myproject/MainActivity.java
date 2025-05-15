@@ -1,6 +1,10 @@
 package com.example.myproject;
 
+import static com.example.myproject.LoginActivity.jwtToken;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,8 +33,15 @@ public class MainActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Intent với MainActivity.this làm context
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+                jwtToken = sharedPreferences.getString("jwt_token", "");
+                if (jwtToken != null && !jwtToken.isEmpty()) {
+                    // Đã đăng nhập → vào HomeActivity (hoặc bất kỳ activity chính nào bạn có)
+                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                } else {
+                    // Chưa đăng nhập → vào LoginActivity
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
                 finish();
             }
         }, 3000);

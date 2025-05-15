@@ -66,7 +66,7 @@
             android:textColor="#808080"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Image"/>
+            android:text="Add Images"/>
 
         <com.hendraanggrian.appcompat.socialview.widget.SocialTextView
             android:id="@+id/description"
@@ -83,7 +83,6 @@
             app:socialFlags="hashtag|mention"
             app:hashtagColor="@color/blue"
             app:mentionColor="#FF0000"/>
-
 
     </LinearLayout>
 

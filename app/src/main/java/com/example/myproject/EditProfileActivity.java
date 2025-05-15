@@ -1,8 +1,7 @@
 package com.example.myproject;
-
-import static com.example.myproject.LoginActivity.jwtToken;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,9 +36,8 @@ import retrofit2.Response;
 
 public class EditProfileActivity extends AppCompatActivity {
     private ActivityEditProfileBinding binding;
-    private LoginActivity loginActivity;
-    private ApiService apiService;
 
+    private ApiService apiService;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private Uri selectedImageUri;
     @Override
@@ -54,12 +52,18 @@ public class EditProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
+        String uname = sharedPreferences.getString("username","");
+        String bio = sharedPreferences.getString("bio","");
+        String profileImage = sharedPreferences.getString("profile_image","");
+        String email = sharedPreferences.getString("email","");
+        binding.unameEditText.setText(uname);
+        binding.bioEditText.setText(bio);
+        binding.emailEditText.setText(email);
 
-        binding.unameEditText.setText(loginActivity.user.getName());
-        binding.bioEditText.setText(loginActivity.user.getBio());
-        binding.emailEditText.setText(loginActivity.user.getEmail());
-
-        String imageUrl = loginActivity.user.getImage();
+        String imageUrl = profileImage;
         if(imageUrl == null || imageUrl.isEmpty())
         {
             binding.imageProfile.setImageResource(R.drawable.blankprofile);
@@ -74,6 +78,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
         //save click
         binding.save.setOnClickListener(new View.OnClickListener() {
+            SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+            int userId = sharedPreferences.getInt("user_id", -1);
+            String jwtToken = sharedPreferences.getString("jwt_token", "");
+            String uname = sharedPreferences.getString("username","");
+            String bio = sharedPreferences.getString("bio","");
+            String profileImage = sharedPreferences.getString("profile_image","");
 
             @Override
             public void onClick(View v) {
@@ -82,12 +92,20 @@ public class EditProfileActivity extends AppCompatActivity {
                 String email = binding.emailEditText.getText().toString();
 
                 apiService = RetrofitClient.getRetrofit().create(ApiService.class);
-                apiService.editUserProfile("Bearer " + jwtToken,loginActivity.user.getUserId(),username,bio,email).enqueue(new Callback<User>() {
+                apiService.editUserProfile("Bearer " + jwtToken,userId,username,bio,email).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if(response.isSuccessful()){
-                            loginActivity.user = response.body();
-                            Log.d("GetUser", "User: " + loginActivity.user.toString());
+                            User user = response.body();
+                            // Lưu thông tin user vào SharedPreferences
+                            SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            //editor.putInt("user_id", user.getUserId());
+                            editor.putString("username", user.getName());
+                            editor.putString("bio",user.getBio());
+                            editor.putString("profile_image",user.getImage());
+                            editor.putString("email",user.getEmail());
+                            editor.commit();
                             setResult(RESULT_OK); // Thông báo cập nhật thành công
                             finish();
                         }
@@ -137,6 +155,12 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
     private void uploadProfileImage(Uri imageUri) {
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
+        String uname = sharedPreferences.getString("username","");
+        String bio = sharedPreferences.getString("bio","");
+        String profileImage = sharedPreferences.getString("profile_image","");
         try {
             // Chuyển Uri thành File
             String filePath = getRealPathFromUri(imageUri);
@@ -145,8 +169,7 @@ public class EditProfileActivity extends AppCompatActivity {
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
             // Lấy username và token (thay bằng giá trị thực tế)
-            String username = loginActivity.user.getName();
-
+            String username = uname;
 
             // Gọi API upload
             apiService = RetrofitClient.getRetrofit().create(ApiService.class);
@@ -156,7 +179,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         Toast.makeText(EditProfileActivity.this, "Ảnh đại diện đã được cập nhật", Toast.LENGTH_SHORT).show();
                         String imageUrl = response.body();
-                        // binding.profileImage.setImageURI(Uri.parse(imageUrl));
+                        //binding.profileImage.setImageURI(Uri.parse(imageUrl));
                     } else {
                         Toast.makeText(EditProfileActivity.this, "Upload thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                     }

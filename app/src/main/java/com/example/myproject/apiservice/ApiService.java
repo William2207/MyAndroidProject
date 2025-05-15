@@ -13,6 +13,7 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -45,6 +46,11 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("username") String username
     );
+    @GET("user/profile/search")
+    Call<List<User>> search(
+            @Header("Authorization") String token,
+            @Query("query") String query
+    );
 
     @FormUrlEncoded
     @POST("user/profile/edit")
@@ -69,6 +75,11 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Body PostCollection post
     );
+    @POST("post/create-reel")
+    Call<PostCollection> createReel(
+            @Header("Authorization") String token,
+            @Body PostCollection reel
+    );
 
     @Multipart
     @POST("media/upload")
@@ -77,10 +88,37 @@ public interface ApiService {
             @Part MultipartBody.Part[] files
     );
 
+    @Multipart
+    @POST("media/upload-reel")
+    Call<String> uploadReel(
+            @Header("Authorization") String token,
+            @Part MultipartBody.Part file
+    );
+
     @GET("post/posts")
     Call<List<PostDTO>> getPosts(
             @Header("Authorization") String token,
             @Query("userId") int userId
+    );
+    @GET("post/reels")
+    Call<List<PostDTO>> getReels(
+            @Header("Authorization") String token,
+            @Query("userId") int userId
+    );
+    @GET("post/user/{userId}/posts")
+    Call<List<PostDTO>> getUserPosts(
+            @Header("Authorization") String token,
+            @Path("userId") int userId
+    );
+    @GET("post/{userId}/liked-posts")
+    Call<List<PostDTO>> getLikedPosts(
+            @Header("Authorization") String token,
+            @Path("userId") int userId
+    );
+    @GET("post/{userId}/saved-posts")
+    Call<List<PostDTO>> getSavedPosts(
+            @Header("Authorization") String token,
+            @Path("userId") int userId
     );
 
     @POST("post/like")
@@ -102,5 +140,14 @@ public interface ApiService {
             @Query("postId") int postId,
             @Body CommentDTO commentDTO
     );
+
+    @POST("follow/{userId}")
+    Call<Void> followUser(@Header("Authorization") String token,@Path("userId") int userId, @Query("username") String username);
+
+    @DELETE("follow/{userId}")
+    Call<Void> unfollowUser(@Header("Authorization") String token,@Path("userId") int userId, @Query("username") String username);
+
+    @GET("follow/{userId}")
+    Call<Boolean> isFollowing(@Header("Authorization") String token,@Path("userId") int userId, @Query("username") String username);
 
 }

@@ -79,14 +79,22 @@ public class LoginActivity extends AppCompatActivity {
                                         if(response.isSuccessful())
                                         {
                                             user = response.body();
-                                            Log.d("GetUser", "User: " + user.toString());
-                                            Log.d("GetUser", "User: " + user.getUserId());
+                                            //Log.d("GetUser", "User: " + user.toString());
+                                            //Log.d("GetUser", "User: " + user.getFollowings());
+                                            //Log.d("GetUser", "User: " + user.getFollowers());
+                                            //Log.d("GetUser", "User: " + user.getPosts());
 
                                             // Lưu thông tin user vào SharedPreferences
                                             SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedPreferences.edit();
                                             editor.putInt("user_id", user.getUserId());
                                             editor.putString("username", user.getName());
+                                            editor.putString("bio",user.getBio());
+                                            editor.putString("profile_image",user.getImage());
+                                            editor.putString("email",user.getEmail());
+                                            editor.putInt("followers",user.getFollowers());
+                                            editor.putInt("followings",user.getFollowings());
+                                            editor.putInt("posts",user.getPosts());
                                             // Lưu các thông tin khác nếu cần
                                             editor.commit();  // Dùng commit() để đảm bảo lưu xong mới chuyển màn hình
 

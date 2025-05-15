@@ -1,6 +1,5 @@
 package com.example.myproject;
 
-import static com.example.myproject.LoginActivity.jwtToken;
 import android.os.Build;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -57,15 +57,33 @@ public class CommentActivity extends AppCompatActivity implements CommentAdapter
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Toolbar toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Comments");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
+        String uname = sharedPreferences.getString("username","");
+        String bio = sharedPreferences.getString("bio","");
+        String profileImage = sharedPreferences.getString("profile_image","");
+        String email = sharedPreferences.getString("email","");
         //Avt user
         Glide.with(CommentActivity.this)
-                .load(LoginActivity.user.getImage())
+                .load(profileImage)
                 .placeholder(R.drawable.blankprofile)
                 .into(binding.imageProfileComment);
 
         // Lấy postId và comments từ Intent
         postId = getIntent().getIntExtra("postId", -1);
-        Log.d("CommentTest", "Serialized post: " + postId);
+        //Log.d("CommentTest", "Serialized post: " + postId);
         if (postId == -1) {
             Toast.makeText(this, "Invalid post ID", Toast.LENGTH_SHORT).show();
             finish();
@@ -99,9 +117,9 @@ public class CommentActivity extends AppCompatActivity implements CommentAdapter
         recyclerViewComments.setLayoutManager(new LinearLayoutManager(this));
 
         // Lấy userId từ SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("user_id", -1);
-        jwtToken = sharedPreferences.getString("jwt_token", "");
+//        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+//        int userId = sharedPreferences.getInt("user_id", -1);
+//        jwtToken = sharedPreferences.getString("jwt_token", "");
 
         apiService = RetrofitClient.getRetrofit().create(ApiService.class);
         loadComments();
@@ -113,9 +131,10 @@ public class CommentActivity extends AppCompatActivity implements CommentAdapter
                     Toast.makeText(CommentActivity.this, "Vui lòng nhập nội dung bình luận", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                User user = new User(userId,uname,bio,profileImage,email);
                 CommentDTO commentDTO = new CommentDTO();
                 commentDTO.setContent(content);
-                commentDTO.setUser(LoginActivity.user);
+                commentDTO.setUser(user);
 
                 if (replyToComment != null) {
                     if(replyToComment.getParentId()!=null)
@@ -128,7 +147,7 @@ public class CommentActivity extends AppCompatActivity implements CommentAdapter
                 } else {
                     commentDTO.setParentId(null); // Comment mới, không có parent
                 }
-                Log.d("CommentTest", "Serialized post: " + replyToComment.getCommentId());
+                //Log.d("CommentTest", "Serialized post: " + replyToComment.getCommentId());
                 apiService.createComment("Bearer "+jwtToken,userId,postId,commentDTO).enqueue(new Callback<CommentDTO>() {
                     @Override
                     public void onResponse(Call<CommentDTO> call, Response<CommentDTO> response) {
@@ -152,6 +171,9 @@ public class CommentActivity extends AppCompatActivity implements CommentAdapter
 
     }
     private void loadComments() {
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
         apiService.getComments("Bearer " + jwtToken, postId)
                 .enqueue(new Callback<List<CommentDTO>>() {
                     @Override
@@ -175,7 +197,7 @@ public class CommentActivity extends AppCompatActivity implements CommentAdapter
     @Override
     public void onReplyClick(CommentDTO comment) {
         replyToComment = comment;
-        Log.d("CommentTest", "Serialized post: " + replyToComment.getCommentId());
+        //Log.d("CommentTest", "Serialized post: " + replyToComment.getCommentId());
         String userReplyName = comment.getUser() != null ? comment.getUser().getName() : "Unknown";
         Toast.makeText(this, "Reply to: " + userReplyName, Toast.LENGTH_SHORT).show();
         binding.addComment.setText("@" + userReplyName + " ");

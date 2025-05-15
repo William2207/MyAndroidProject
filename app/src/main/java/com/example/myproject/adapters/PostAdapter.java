@@ -4,6 +4,7 @@ import static com.example.myproject.LoginActivity.jwtToken;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -79,7 +80,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 .placeholder(R.drawable.blankprofile)
                 .into(holder.profileImage);
         apiService = RetrofitClient.getRetrofit().create(ApiService.class);
-        int userId = LoginActivity.user.getUserId();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_id", -1);
+        jwtToken = sharedPreferences.getString("jwt_token", "");
         // save click event
         holder.save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +166,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 // Chuyển danh sách comments thành ArrayList (vì ArrayList cũng triển khai Parcelable)
                 ArrayList<CommentDTO> commentArrayList = new ArrayList<>(post.getComments());
                 intent.putParcelableArrayListExtra("comments", commentArrayList);
-                Log.d("CommentTest", "Serialized post: " + commentArrayList);
+                //Log.d("CommentTest", "Serialized post: " + commentArrayList);
                 context.startActivity(intent);
             }
         });

@@ -1,9 +1,9 @@
 package com.example.myproject.post;
 
-import static com.example.myproject.LoginActivity.jwtToken;
-
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +21,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.myproject.LoginActivity;
 import com.example.myproject.R;
 import com.example.myproject.adapters.ImageAdapter;
 import com.example.myproject.apiservice.ApiService;
@@ -48,7 +47,6 @@ public class PostActivity extends AppCompatActivity {
     // Lưu trữ danh sách URI ảnh đã chọn
     private List<Uri> selectedImageUris = new ArrayList<>();
     private ApiService apiService;
-    private LoginActivity loginActivity;
     private PostCollection postCollection;
 
     // Khai báo launcher ở cấp lớp
@@ -130,6 +128,12 @@ public class PostActivity extends AppCompatActivity {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
         progressDialog.show();
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int userid = sharedPreferences.getInt("user_id", -1);
+        String jwtToken = sharedPreferences.getString("jwt_token", "");
+        String uname = sharedPreferences.getString("username","");
+        String bio = sharedPreferences.getString("bio","");
+        String profileImage = sharedPreferences.getString("profile_image","");
 
         // Chuyển đổi danh sách URI thành mảng MultipartBody.Part
         MultipartBody.Part[] imageParts = new MultipartBody.Part[imageUris.size()];
@@ -160,7 +164,6 @@ public class PostActivity extends AppCompatActivity {
                 public void onResponse(Call<List<String>> call, Response<List<String>> response) {
                     if (response.isSuccessful()) {
                         List<String> imageUrls = response.body();
-                        int userid = loginActivity.user.getUserId();
                         Log.d("GetUser", "User: " + userid);
                         postCollection = new PostCollection(userid,content,imageUrls);
                         apiService.createPost("Bearer "+ jwtToken, postCollection).enqueue(new Callback<PostCollection>() {
