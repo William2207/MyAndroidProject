@@ -51,7 +51,7 @@ Maven 3.6+
 # Backend Setup
 
 Clone the repository
-bashgit clone https://github.com/William2207/MyAndroidProject.git
+bashgit clone https://github.com/William2207/MyAndroidProject.git 
 cd social-media-app/backend
 
 Configure database connections in application.properties
