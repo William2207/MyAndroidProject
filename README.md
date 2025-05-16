@@ -1,6 +1,6 @@
 # Social Media Application
 A mobile social media platform similar to Instagram, built with Android Studio (Java) frontend and Spring Boot backend. The application uses PostgreSQL and MongoDB for data storage.
-Features
+# Features
 
 User Authentication: Secure login and registration system
 Profile Management: Create and edit user profiles with profile pictures
