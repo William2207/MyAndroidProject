@@ -2,14 +2,14 @@
 A mobile social media platform similar to Instagram, built with Android Studio (Java) frontend and Spring Boot backend. The application uses PostgreSQL and MongoDB for data storage.
 # Features
 
-User Authentication: Secure login and registration system
-Profile Management: Create and edit user profiles with profile pictures
-Post Creation: Share images with captions
-Feed: View posts from followed users
-Interactions: Like and comment on posts
-Follow System: Follow/unfollow other users
-Search: Find users and posts by keywords
-Chatbot Assistant: AI-powered chatbot to help users navigate the platform and answer questions
+- User Authentication: Secure login and registration system
+- Profile Management: Create and edit user profiles with profile pictures
+- Post Creation: Share images with captions
+- Feed: View posts from followed users
+- Interactions: Like and comment on posts
+- Follow System: Follow/unfollow other users
+- Search: Find users and posts by keywords
+- Chatbot Assistant: AI-powered chatbot to help users navigate the platform and answer questions
 
 Tech Stack
 # Frontend
