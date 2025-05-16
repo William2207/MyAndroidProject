@@ -14,30 +14,30 @@ A mobile social media platform similar to Instagram, built with Android Studio (
 Tech Stack
 # Frontend
 
-Android Studio
-Java
-XML layouts
-Retrofit for API calls
-Glide for image loading
+- Android Studio
+- Java
+- XML layouts
+- Retrofit for API calls
+- Glide for image loading
 
 # Backend
 
-Spring Boot
-Spring Security
-Spring Data JPA
-REST API architecture
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- REST API architecture
 
 # Database
 
-PostgreSQL: User data, relationships, and authentication
-MongoDB: Media content and posts
+- PostgreSQL: User data, relationships, and authentication
+- MongoDB: Media content and posts
 
 # Architecture
 The application follows a client-server architecture:
 
-Mobile Client: Android application handling UI and user interactions
-RESTful API: Spring Boot server providing endpoints for all functionalities
-Database Layer: Hybrid database approach with relational and NoSQL databases
+- Mobile Client: Android application handling UI and user interactions
+- RESTful API: Spring Boot server providing endpoints for all functionalities
+- Database Layer: Hybrid database approach with relational and NoSQL databases
 
 # Installation and Setup
 Prerequisites
@@ -73,31 +73,31 @@ Build and run the application on an emulator or physical device
 # Database Schema
 PostgreSQL Tables
 
-users - User accounts and profile information
-follow - User following relationships
-likes - Post likes
-comments - Post comments
-save - Post save
+- users - User accounts and profile information
+- follow - User following relationships
+- likes - Post likes
+- comments - Post comments
+- save - Post save
 
 MongoDB Collections
 
-posts - User posts including media, captions, and metadata
+- posts - User posts including media, captions, and metadata
 
 # Future Enhancements
 
-Direct messaging functionality
-Stories feature
-Explore page
-Post tagging and location
-Real time notification
+- Direct messaging functionality
+- Stories feature
+- Explore page
+- Post tagging and location
+- Real time notification
 
 # Contributing
 
-Fork the repository
-Create your feature branch (git checkout -b feature/amazing-feature)
-Commit your changes (git commit -m 'Add some amazing feature')
-Push to the branch (git push origin feature/amazing-feature)
-Open a Pull Request
+- Fork the repository
+- Create your feature branch (git checkout -b feature/amazing-feature)
+- Commit your changes (git commit -m 'Add some amazing feature')
+- Push to the branch (git push origin feature/amazing-feature)
+- Open a Pull Request
 
 # License
 This project is licensed under the MIT License - see the LICENSE.md file for details
